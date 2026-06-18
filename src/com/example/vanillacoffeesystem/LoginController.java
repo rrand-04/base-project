@@ -133,7 +133,7 @@ public class LoginController {
                     return;
                 }
                 SessionManager.setCustomer(rs.getInt("customer_id"), rs.getString("customer_name"));
-                openHome();
+                openDashboard();
             }
 
         } catch (Exception e) {
@@ -216,7 +216,7 @@ public class LoginController {
         Stage stage = (Stage) loginButton.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml(fxml)));
         Parent root = loader.load();
-        stage.setScene(new Scene(root, 1100, 720));
+        stage.setScene(SceneHelper.create(root));
         stage.setTitle(title);
         stage.show();
     }

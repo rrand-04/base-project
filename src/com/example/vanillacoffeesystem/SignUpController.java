@@ -116,7 +116,7 @@ public class SignUpController {
         Stage stage = (Stage) registerButton.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml(fxml)));
         Parent root = loader.load();
-        stage.setScene(new Scene(root, 1100, 720));
+        stage.setScene(SceneHelper.create(root));
         stage.setTitle(title);
         stage.show();
     }

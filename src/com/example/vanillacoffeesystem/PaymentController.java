@@ -179,7 +179,7 @@ public class PaymentController {
         Stage stage = (Stage) paymentsTable.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml("home-view.fxml")));
         Parent root = loader.load();
-        stage.setScene(new Scene(root, 1100, 720));
+        stage.setScene(SceneHelper.create(root));
         stage.setTitle("Vanilla Coffee");
         stage.show();
     }

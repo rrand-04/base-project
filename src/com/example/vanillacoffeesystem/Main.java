@@ -14,7 +14,7 @@ public class Main extends Application {
                 Main.class.getResource(ViewPaths.fxml("home-view.fxml"))
         );
 
-        Scene scene = new Scene(fxmlLoader.load(), 1100, 720);
+        Scene scene = SceneHelper.create(fxmlLoader.load());
 
         stage.setTitle("Vanilla Coffee");
         stage.setScene(scene);
