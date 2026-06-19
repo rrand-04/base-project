@@ -230,51 +230,22 @@ public class DeliveryController {
             return;
         }
 
-        String deliverySql = "UPDATE Delivery SET delivery_status = ?, delivery_time = NOW() WHERE delivery_id = ?";
-        String completeOrderSql = """
-                UPDATE Orders
-                SET order_status = 'Completed'
-                WHERE order_id = ? AND is_active = TRUE
-                """;
+        String sql = "UPDATE Delivery SET delivery_status = ?, delivery_time = NOW() WHERE delivery_id = ?";
 
-        try (Connection con = DBConnection.getConnection()) {
-            con.setAutoCommit(false);
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            try {
-                try (PreparedStatement ps = con.prepareStatement(deliverySql)) {
-                    ps.setString(1, newStatus);
-                    ps.setInt(2, selected.getDeliveryId());
-                    int updated = ps.executeUpdate();
-                    if (updated == 0) {
-                        con.rollback();
-                        showUpdateError("Could not update delivery status.");
-                        return;
-                    }
-                }
+            ps.setString(1, newStatus);
+            ps.setInt(2, selected.getDeliveryId());
+            int updated = ps.executeUpdate();
 
-                if ("delivered".equalsIgnoreCase(newStatus)) {
-                    try (PreparedStatement ps = con.prepareStatement(completeOrderSql)) {
-                        ps.setInt(1, selected.getOrderId());
-                        ps.executeUpdate();
-                    }
-                }
-
-                con.commit();
-            } catch (Exception e) {
-                con.rollback();
-                throw e;
-            } finally {
-                con.setAutoCommit(true);
+            if (updated > 0) {
+                loadDeliveries();
+                showAlert(Alert.AlertType.INFORMATION, "Status Updated",
+                        "Delivery #" + selected.getDeliveryId() + " is now " + formatStatus(newStatus) + ".");
+            } else {
+                showUpdateError("Could not update delivery status.");
             }
-
-            loadDeliveries();
-
-            String message = "delivered".equalsIgnoreCase(newStatus)
-                    ? "Delivery #" + selected.getDeliveryId() + " is now Delivered. Order #"
-                        + selected.getOrderId() + " has been marked Completed."
-                    : "Delivery #" + selected.getDeliveryId() + " is now " + formatStatus(newStatus) + ".";
-            showAlert(Alert.AlertType.INFORMATION, "Status Updated", message);
-
         } catch (Exception e) {
             e.printStackTrace();
             showUpdateError("Could not update delivery status. Please try again.");
@@ -286,7 +257,7 @@ public class DeliveryController {
         Stage stage = (Stage) deliveriesTable.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml("home-view.fxml")));
         Parent root = loader.load();
-        stage.setScene(SceneHelper.create(root));
+        stage.setScene(new Scene(root, 1100, 720));
         stage.setTitle("Vanilla Coffee");
         stage.show();
     }

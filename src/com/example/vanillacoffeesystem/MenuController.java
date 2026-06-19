@@ -1,13 +1,12 @@
 package com.example.vanillacoffeesystem;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -46,12 +45,6 @@ public class MenuController {
     @FXML private HBox categoryBar;
     @FXML private HBox drinksSubBar;
     @FXML private FlowPane menuGrid;
-    @FXML private ProgressIndicator bestSellerProgress;
-    @FXML private VBox bestSellerContent;
-    @FXML private Label bestSellerNameLabel;
-    @FXML private Label bestSellerCategoryLabel;
-    @FXML private Label bestSellerQtyLabel;
-    @FXML private Label bestSellerEmptyLabel;
 
     private final List<MenuItem> allItems = new ArrayList<>();
     private String activeCategory = "All";
@@ -70,94 +63,6 @@ public class MenuController {
         loadMenu();
         buildCategoryBar();
         renderMenu();
-        loadBestSeller();
-    }
-
-    private void loadBestSeller() {
-        bestSellerProgress.setVisible(true);
-        bestSellerProgress.setManaged(true);
-        bestSellerContent.setVisible(false);
-        bestSellerContent.setManaged(false);
-        bestSellerEmptyLabel.setVisible(false);
-        bestSellerEmptyLabel.setManaged(false);
-
-        int branchId = SessionManager.getSelectedBranchId();
-        if (branchId <= 0) {
-            showBestSellerEmpty("Select a branch to see popular items.");
-            return;
-        }
-
-        Thread worker = new Thread(() -> {
-            BestSellerResult result = queryBestSellerForBranch(branchId);
-            Platform.runLater(() -> displayBestSeller(result));
-        });
-        worker.setDaemon(true);
-        worker.start();
-    }
-
-    private BestSellerResult queryBestSellerForBranch(int branchId) {
-        String sql = """
-                SELECT p.product_name, p.product_category,
-                       SUM(oi.quantity) AS total_qty
-                FROM Order_Items oi
-                JOIN Orders o ON oi.order_id = o.order_id
-                JOIN Product p ON oi.product_id = p.product_id
-                WHERE o.branch_id = ?
-                  AND o.is_active = TRUE
-                GROUP BY oi.product_id, p.product_name, p.product_category
-                ORDER BY total_qty DESC
-                LIMIT 1
-                """;
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(1, branchId);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new BestSellerResult(
-                            rs.getString("product_name"),
-                            rs.getString("product_category"),
-                            rs.getInt("total_qty")
-                    );
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private void displayBestSeller(BestSellerResult result) {
-        bestSellerProgress.setVisible(false);
-        bestSellerProgress.setManaged(false);
-
-        if (result == null) {
-            showBestSellerEmpty("No sales recorded at this branch yet.");
-            return;
-        }
-
-        bestSellerNameLabel.setText(result.productName());
-        bestSellerCategoryLabel.setText(result.productCategory());
-        bestSellerQtyLabel.setText("Sold " + result.totalQty() + " times across all orders");
-        bestSellerEmptyLabel.setVisible(false);
-        bestSellerEmptyLabel.setManaged(false);
-        bestSellerContent.setVisible(true);
-        bestSellerContent.setManaged(true);
-    }
-
-    private void showBestSellerEmpty(String message) {
-        bestSellerProgress.setVisible(false);
-        bestSellerProgress.setManaged(false);
-        bestSellerContent.setVisible(false);
-        bestSellerContent.setManaged(false);
-        bestSellerEmptyLabel.setText(message);
-        bestSellerEmptyLabel.setVisible(true);
-        bestSellerEmptyLabel.setManaged(true);
-    }
-
-    private record BestSellerResult(String productName, String productCategory, int totalQty) {
     }
 
     private boolean usesRestaurantMenu() {
@@ -472,7 +377,7 @@ public class MenuController {
         Stage stage = (Stage) branchLabel.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml("home-view.fxml")));
         Parent root = loader.load();
-        stage.setScene(SceneHelper.create(root));
+        stage.setScene(new Scene(root, 1100, 720));
         stage.setTitle("Vanilla Coffee");
         stage.show();
     }

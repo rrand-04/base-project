@@ -6,9 +6,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
@@ -18,8 +18,6 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
@@ -31,13 +29,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Optional;
 
 public class ReservationController {
 
-    @FXML private Label pageTitleLabel;
-    @FXML private Label listTitleLabel;
-    @FXML private VBox bookFormPanel;
     @FXML private ComboBox<Branch> branchCombo;
     @FXML private DatePicker datePicker;
     @FXML private TextField timeField;
@@ -46,7 +40,6 @@ public class ReservationController {
     @FXML private Label formErrorLabel;
     @FXML private TableView<ReservationRecord> reservationsTable;
     @FXML private TableColumn<ReservationRecord, String> idColumn;
-    @FXML private TableColumn<ReservationRecord, String> customerColumn;
     @FXML private TableColumn<ReservationRecord, String> branchColumn;
     @FXML private TableColumn<ReservationRecord, String> dateColumn;
     @FXML private TableColumn<ReservationRecord, String> timeColumn;
@@ -54,40 +47,16 @@ public class ReservationController {
     @FXML private TableColumn<ReservationRecord, String> statusColumn;
     @FXML private Button cancelButton;
     @FXML private Label emptyLabel;
-    @FXML private HBox customerCancelPanel;
-    @FXML private VBox staffUpdatePanel;
-    @FXML private Label staffSelectedLabel;
-    @FXML private ComboBox<String> statusCombo;
-    @FXML private Button updateStatusButton;
-    @FXML private Label updateErrorLabel;
 
     private final ObservableList<ReservationRecord> reservations = FXCollections.observableArrayList();
     private final ObservableList<Branch> branches = FXCollections.observableArrayList();
-    private boolean employeeMode;
 
     @FXML
     public void initialize() {
-        employeeMode = SessionManager.isEmployee();
-
-        if (!SessionManager.isLoggedIn() || SessionManager.isGuest()) {
+        if (!SessionManager.isLoggedIn() || SessionManager.isGuest() || SessionManager.isEmployee()) {
             showAlert(Alert.AlertType.WARNING, "Reservations",
-                    "Please sign in to view reservations.");
+                    "Please sign in as a customer to make or view reservations.");
             bookButton.setDisable(true);
-        } else if (employeeMode) {
-            pageTitleLabel.setText("Manage Reservations");
-            listTitleLabel.setText("All Reservations");
-            bookFormPanel.setVisible(false);
-            bookFormPanel.setManaged(false);
-            customerCancelPanel.setVisible(false);
-            customerCancelPanel.setManaged(false);
-            staffUpdatePanel.setVisible(true);
-            staffUpdatePanel.setManaged(true);
-            customerColumn.setVisible(true);
-        } else {
-            pageTitleLabel.setText("Table Reservations");
-            staffUpdatePanel.setVisible(false);
-            staffUpdatePanel.setManaged(false);
-            customerColumn.setVisible(false);
         }
 
         branchCombo.setItems(branches);
@@ -117,13 +86,8 @@ public class ReservationController {
             }
         });
 
-        statusCombo.setItems(FXCollections.observableArrayList(
-                "pending", "confirmed", "completed", "cancelled"));
-
         idColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(String.valueOf(data.getValue().getReservationId())));
-        customerColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getCustomerName()));
         branchColumn.setCellValueFactory(data ->
                 new SimpleStringProperty(data.getValue().getBranchName()));
         dateColumn.setCellValueFactory(data ->
@@ -137,37 +101,10 @@ public class ReservationController {
 
         reservationsTable.setItems(reservations);
         reservationsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, selected) ->
-                onReservationSelected(selected));
+                cancelButton.setDisable(selected == null || !selected.isPending()));
 
-        if (!employeeMode) {
-            loadBranches();
-        }
+        loadBranches();
         loadReservations();
-    }
-
-    private void onReservationSelected(ReservationRecord selected) {
-        clearUpdateError();
-
-        if (employeeMode) {
-            boolean canUpdate = selected != null && selected.isCancellable();
-            statusCombo.setDisable(!canUpdate);
-            updateStatusButton.setDisable(!canUpdate);
-
-            if (selected == null) {
-                staffSelectedLabel.setText("Select a reservation to update its status.");
-                statusCombo.getSelectionModel().clearSelection();
-            } else {
-                staffSelectedLabel.setText("Reservation #" + selected.getReservationId()
-                        + " — " + selected.getCustomerName()
-                        + " at " + selected.getBranchName()
-                        + " on " + selected.getReservationDate()
-                        + " " + formatTime(selected.getReservationTime()));
-                statusCombo.getSelectionModel().select(selected.getStatus().toLowerCase());
-            }
-            return;
-        }
-
-        cancelButton.setDisable(selected == null || !selected.isCancellable());
     }
 
     private void loadBranches() {
@@ -196,65 +133,39 @@ public class ReservationController {
         reservations.clear();
         emptyLabel.setVisible(false);
         emptyLabel.setManaged(false);
-        onReservationSelected(null);
+        cancelButton.setDisable(true);
 
-        if (!SessionManager.isLoggedIn()) {
-            emptyLabel.setText("Sign in to see reservations.");
+        if (!SessionManager.isLoggedIn() || SessionManager.isEmployee()) {
+            emptyLabel.setText("Sign in as a customer to see your reservations.");
             emptyLabel.setVisible(true);
             emptyLabel.setManaged(true);
             return;
         }
 
-        String sql;
-        if (employeeMode) {
-            sql = """
-                    SELECT r.reservation_id, b.branch_name, r.reservation_date, r.reservation_time,
-                           r.number_of_people, r.status, c.customer_name
-                    FROM Reservation r
-                    JOIN Branches b ON r.branch_id = b.branch_id
-                    JOIN Customers c ON r.customer_id = c.customer_id
-                    ORDER BY r.reservation_date DESC, r.reservation_time DESC
-                    """;
-        } else {
-            sql = """
-                    SELECT r.reservation_id, b.branch_name, r.reservation_date, r.reservation_time,
-                           r.number_of_people, r.status
-                    FROM Reservation r
-                    JOIN Branches b ON r.branch_id = b.branch_id
-                    WHERE r.customer_id = ?
-                    ORDER BY r.reservation_date DESC, r.reservation_time DESC
-                    """;
-        }
+        String sql = """
+                SELECT r.reservation_id, b.branch_name, r.reservation_date, r.reservation_time,
+                       r.number_of_people, r.status
+                FROM Reservation r
+                JOIN Branches b ON r.branch_id = b.branch_id
+                WHERE r.customer_id = ?
+                ORDER BY r.reservation_date DESC, r.reservation_time DESC
+                """;
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
-            if (!employeeMode) {
-                ps.setInt(1, SessionManager.getCustomerId());
-            }
+            ps.setInt(1, SessionManager.getCustomerId());
 
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    if (employeeMode) {
-                        reservations.add(new ReservationRecord(
-                                rs.getInt("reservation_id"),
-                                rs.getString("branch_name"),
-                                rs.getString("reservation_date"),
-                                rs.getString("reservation_time"),
-                                rs.getInt("number_of_people"),
-                                rs.getString("status"),
-                                rs.getString("customer_name")
-                        ));
-                    } else {
-                        reservations.add(new ReservationRecord(
-                                rs.getInt("reservation_id"),
-                                rs.getString("branch_name"),
-                                rs.getString("reservation_date"),
-                                rs.getString("reservation_time"),
-                                rs.getInt("number_of_people"),
-                                rs.getString("status")
-                        ));
-                    }
+                    reservations.add(new ReservationRecord(
+                            rs.getInt("reservation_id"),
+                            rs.getString("branch_name"),
+                            rs.getString("reservation_date"),
+                            rs.getString("reservation_time"),
+                            rs.getInt("number_of_people"),
+                            rs.getString("status")
+                    ));
                 }
             }
         } catch (Exception e) {
@@ -263,7 +174,7 @@ public class ReservationController {
         }
 
         if (reservations.isEmpty()) {
-            emptyLabel.setText(employeeMode ? "No reservations found." : "No reservations yet.");
+            emptyLabel.setText("No reservations yet.");
             emptyLabel.setVisible(true);
             emptyLabel.setManaged(true);
         }
@@ -346,40 +257,22 @@ public class ReservationController {
     @FXML
     public void cancelReservation() {
         ReservationRecord selected = reservationsTable.getSelectionModel().getSelectedItem();
-        if (selected == null || !selected.isCancellable()) {
+        if (selected == null || !selected.isPending()) {
             return;
         }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Cancel Reservation");
-        confirm.setHeaderText("Cancel reservation #" + selected.getReservationId() + "?");
-        confirm.setContentText(selected.getBranchName() + " on " + selected.getReservationDate()
-                + " at " + formatTime(selected.getReservationTime()));
-        Optional<ButtonType> result = confirm.showAndWait();
-        if (result.isEmpty() || result.get() != ButtonType.OK) {
-            return;
-        }
-
-        String sql = """
-                UPDATE Reservation SET status = 'cancelled'
-                WHERE reservation_id = ? AND customer_id = ?
-                  AND status IN ('pending', 'confirmed')
-                """;
+        String sql = "UPDATE Reservation SET status = 'cancelled' WHERE reservation_id = ?";
 
         try (Connection con = DBConnection.getConnection();
              PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, selected.getReservationId());
-            ps.setInt(2, SessionManager.getCustomerId());
             int updated = ps.executeUpdate();
 
             if (updated > 0) {
                 loadReservations();
                 showAlert(Alert.AlertType.INFORMATION, "Cancelled",
                         "Reservation #" + selected.getReservationId() + " has been cancelled.");
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Error",
-                        "Could not cancel this reservation. It may already be completed or cancelled.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -388,58 +281,11 @@ public class ReservationController {
     }
 
     @FXML
-    public void updateReservationStatus() {
-        if (!employeeMode) {
-            return;
-        }
-
-        clearUpdateError();
-
-        ReservationRecord selected = reservationsTable.getSelectionModel().getSelectedItem();
-        String newStatus = statusCombo.getValue();
-
-        if (selected == null) {
-            showUpdateError("Please select a reservation first.");
-            return;
-        }
-        if (newStatus == null || newStatus.isBlank()) {
-            showUpdateError("Please choose a status.");
-            return;
-        }
-        if (newStatus.equalsIgnoreCase(selected.getStatus())) {
-            showUpdateError("Reservation already has this status.");
-            return;
-        }
-
-        String sql = "UPDATE Reservation SET status = ? WHERE reservation_id = ?";
-
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setString(1, newStatus);
-            ps.setInt(2, selected.getReservationId());
-            int updated = ps.executeUpdate();
-
-            if (updated > 0) {
-                loadReservations();
-                showAlert(Alert.AlertType.INFORMATION, "Status Updated",
-                        "Reservation #" + selected.getReservationId()
-                                + " is now " + capitalizeStatus(newStatus) + ".");
-            } else {
-                showUpdateError("Could not update reservation status.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            showUpdateError("Could not update reservation status.");
-        }
-    }
-
-    @FXML
     public void backToHome() throws Exception {
         Stage stage = (Stage) reservationsTable.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml("home-view.fxml")));
         Parent root = loader.load();
-        stage.setScene(SceneHelper.create(root));
+        stage.setScene(new Scene(root, 1100, 720));
         stage.setTitle("Vanilla Coffee");
         stage.show();
     }
@@ -485,18 +331,6 @@ public class ReservationController {
         formErrorLabel.setText("");
         formErrorLabel.setVisible(false);
         formErrorLabel.setManaged(false);
-    }
-
-    private void clearUpdateError() {
-        updateErrorLabel.setText("");
-        updateErrorLabel.setVisible(false);
-        updateErrorLabel.setManaged(false);
-    }
-
-    private void showUpdateError(String message) {
-        updateErrorLabel.setText(message);
-        updateErrorLabel.setVisible(true);
-        updateErrorLabel.setManaged(true);
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

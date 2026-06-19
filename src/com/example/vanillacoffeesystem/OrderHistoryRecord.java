@@ -7,16 +7,14 @@ public class OrderHistoryRecord {
     private final String orderStatus;
     private final double totalPrice;
     private final String branchName;
-    private final boolean isActive;
 
     public OrderHistoryRecord(int orderId, String orderDate, String orderStatus,
-                              double totalPrice, String branchName, boolean isActive) {
+                              double totalPrice, String branchName) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;
         this.branchName = branchName;
-        this.isActive = isActive;
     }
 
     public int getOrderId() {
@@ -37,13 +35,5 @@ public class OrderHistoryRecord {
 
     public String getBranchName() {
         return branchName;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public boolean isPending() {
-        return isActive && "Pending".equalsIgnoreCase(orderStatus);
     }
 }

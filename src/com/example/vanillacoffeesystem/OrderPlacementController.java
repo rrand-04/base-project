@@ -270,7 +270,7 @@ public class OrderPlacementController {
         String paymentStatus = paymentResult.status();
         LocalDate paymentDate = LocalDate.now();
         double paymentAmount = total;
-        String orderStatus = "Pending";
+        String orderStatus = "Completed";
 
         int customerId = SessionManager.getCustomerId();
         int branchId = branch.getBranchId();
@@ -359,8 +359,7 @@ public class OrderPlacementController {
             alert.setTitle("Order Placed");
             alert.setHeaderText("Thank you for your order!");
             alert.setContentText(String.format(
-                    "Order #%d is pending.%nPayment of ₪ %.2f via %s was approved (%s).%n%n"
-                            + "You can cancel it from My Orders while it is still pending.",
+                    "Order #%d submitted successfully.%nPayment of ₪ %.2f via %s was approved (%s).",
                     orderId, paymentAmount, paymentMethod, paymentStatus
             ));
             alert.showAndWait();
@@ -393,7 +392,7 @@ public class OrderPlacementController {
         Stage stage = (Stage) placeOrderButton.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml("home-view.fxml")));
         Parent root = loader.load();
-        stage.setScene(SceneHelper.create(root));
+        stage.setScene(new Scene(root, 1100, 720));
         stage.setTitle("Vanilla Coffee");
         stage.show();
     }
