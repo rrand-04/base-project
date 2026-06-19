@@ -359,6 +359,11 @@ public class DashboardController {
     }
 
     @FXML
+    public void openCharts() throws Exception {
+        navigate("chart-view.fxml", "Vanilla Coffee - Charts & Reports");
+    }
+
+    @FXML
     public void openDeliveries() throws Exception {
         navigate("delivery-view.fxml", SessionManager.isEmployee()
                 ? "Vanilla Coffee - Manage Deliveries"

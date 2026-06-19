@@ -41,6 +41,8 @@
                                 prefWidth="150" prefHeight="44" styleClass="btn-outline"/>
                         <Button fx:id="paymentsButton" text="Payments" onAction="#openPayments"
                                 prefWidth="150" prefHeight="44" styleClass="btn-outline"/>
+                        <Button text="Charts &amp; Reports" onAction="#openCharts"
+                                prefWidth="150" prefHeight="44" styleClass="btn-outline"/>
                         <Button text="Browse Menu" onAction="#openMainApp"
                                 prefWidth="150" prefHeight="44" styleClass="btn-primary"/>
                     </FlowPane>

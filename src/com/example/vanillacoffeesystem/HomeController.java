@@ -68,7 +68,11 @@ public class HomeController {
                 styleOutlineButton(paymentsBtn);
                 paymentsBtn.setOnAction(e -> openPayments());
 
-                authBox.getChildren().addAll(welcome, dashboardBtn, orderBtn, historyBtn, reservationBtn, deliveryBtn, paymentsBtn, logoutBtn);
+                Button chartsBtn = new Button("Charts");
+                styleOutlineButton(chartsBtn);
+                chartsBtn.setOnAction(e -> openCharts());
+
+                authBox.getChildren().addAll(welcome, dashboardBtn, orderBtn, historyBtn, reservationBtn, deliveryBtn, paymentsBtn, chartsBtn, logoutBtn);
             } else {
                 Button manageOrdersBtn = new Button("Manage Orders");
                 styleOutlineButton(manageOrdersBtn);
@@ -229,6 +233,14 @@ public class HomeController {
     private void openPayments() {
         try {
             switchScene("payment-view.fxml", "Vanilla Coffee - Payment History");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openCharts() {
+        try {
+            switchScene("chart-view.fxml", "Vanilla Coffee - Charts & Reports");
         } catch (Exception e) {
             e.printStackTrace();
         }
