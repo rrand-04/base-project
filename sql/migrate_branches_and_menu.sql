@@ -1,6 +1,4 @@
--- Adds 6 Vanilla branches + Food / Drinks / Desserts menu dummy data
--- Run in MySQL Workbench on vanilla_db
-
+-- Sample branches and starter menu data.
 USE vanilla_db;
 
 SET FOREIGN_KEY_CHECKS = 0;

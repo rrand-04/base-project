@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Vanilla Coffee System" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="com.example.vanillacoffeesystem.Main" />
+    <option name="MAIN_CLASS_NAME" value="vanillacoffeesystem.Main" />
     <module name="DataBaseFinalProject" />
     <option name="VM_PARAMETERS" value="--module-path /Users/rand/Downloads/javafx-sdk-26.0.1/lib --add-modules javafx.controls,javafx.fxml" />
     <method v="2">

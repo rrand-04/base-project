@@ -1,5 +1,4 @@
--- Replace weak test passwords with policy-compliant values.
--- Run: mysql -u root -p vanilla_db < sql/migrate_strong_passwords.sql
+-- Strong passwords for the sample customer accounts.
 USE vanilla_db;
 
 UPDATE Customers SET password = 'Customer@1' WHERE username = 'lina';

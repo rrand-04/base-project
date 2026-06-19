@@ -1,4 +1,4 @@
--- Run in MySQL Workbench to add branch-specific menu prices
+-- Branch-specific menu prices.
 USE vanilla_db;
 
 ALTER TABLE Branch_Product ADD COLUMN branch_price DECIMAL(10,2) NULL AFTER is_available;

@@ -1,5 +1,4 @@
--- Run this in MySQL Workbench if you already created vanilla_db before username/password were added
-
+-- Adds username and password columns for customer login.
 USE vanilla_db;
 
 ALTER TABLE Customers ADD COLUMN username VARCHAR(50) UNIQUE AFTER customer_contact;

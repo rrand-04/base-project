@@ -1,6 +1,4 @@
--- Restore the original full menu (categories + images).
--- Run: mysql -u root -p vanilla_db < sql/restore_full_menu.sql
-
+-- Restores the full branch menu, categories, and product images.
 USE vanilla_db;
 
 -- Safe add image_file column

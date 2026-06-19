@@ -1,4 +1,4 @@
--- Product reviews (Feature 3)
+-- Product review table used by My Orders and the ratings chart.
 USE vanilla_db;
 
 CREATE TABLE IF NOT EXISTS Review (

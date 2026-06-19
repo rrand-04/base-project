@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="vanillacoffeesystem.LoginController"
+           style="-fx-background-color: linear-gradient(to bottom right, #2c1810, #4e342e, #6d4c41);">
+
+    <VBox alignment="CENTER" spacing="0" maxWidth="440"
+          style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 24, 0, 0, 6);">
+        <padding>
+            <Insets top="32" right="40" bottom="32" left="40"/>
+        </padding>
+
+        <Label text="☕"
+               style="-fx-font-size: 36px; -fx-padding: 0 0 4 0;"/>
+
+        <Label text="Vanilla Coffee"
+               style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
+
+        <Label text="Welcome back"
+               style="-fx-font-size: 13px; -fx-text-fill: #8d6e63; -fx-padding: 2 0 20 0;"/>
+
+        <!-- Customer / Employee toggle -->
+        <HBox alignment="CENTER" spacing="0" prefWidth="320"
+              style="-fx-background-color: #f5efe9; -fx-background-radius: 10; -fx-padding: 4;">
+            <ToggleButton fx:id="customerTab" text="Customer"
+                          prefWidth="156" prefHeight="36"
+                          style="-fx-background-radius: 8; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+            <ToggleButton fx:id="employeeTab" text="Employee"
+                          prefWidth="156" prefHeight="36"
+                          style="-fx-background-radius: 8; -fx-font-size: 13px; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        </HBox>
+
+        <Label fx:id="loginHintLabel" text="Sign in with your customer account"
+               wrapText="true" prefWidth="320"
+               style="-fx-font-size: 12px; -fx-text-fill: #a1887f; -fx-padding: 14 0 0 0;"/>
+
+        <VBox spacing="10" alignment="CENTER_LEFT" prefWidth="320" style="-fx-padding: 16 0 0 0;">
+
+            <Label text="Username" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+            <TextField fx:id="usernameField" promptText="e.g. lina"
+                       prefWidth="320" prefHeight="42"
+                       style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-font-size: 14px;"/>
+
+            <Label text="Password" style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #5d4037; -fx-padding: 6 0 0 0;"/>
+            <PasswordField fx:id="passwordField" promptText="Enter your password"
+                           prefWidth="320" prefHeight="42"
+                           style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-font-size: 14px;"/>
+
+            <Label text="At least 8 characters with uppercase, lowercase, a number, and a symbol."
+                   wrapText="true" prefWidth="320"
+                   style="-fx-font-size: 11px; -fx-text-fill: #a1887f;"/>
+
+            <Label fx:id="errorLabel" text="" wrapText="true" prefWidth="320" visible="false" managed="false"
+                   style="-fx-font-size: 12px; -fx-text-fill: #c62828; -fx-padding: 4 0 0 0;"/>
+
+            <Button fx:id="loginButton" text="Sign In" onAction="#handleLogin"
+                    prefWidth="320" prefHeight="44"
+                    style="-fx-background-color: #6d4c41; -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand; -fx-padding: 12 0 0 0;"/>
+
+            <HBox fx:id="signUpRow" alignment="CENTER" spacing="4" style="-fx-padding: 8 0 0 0;">
+                <Label text="Don't have an account?"
+                       style="-fx-font-size: 13px; -fx-text-fill: #8d6e63;"/>
+                <Hyperlink fx:id="signUpLink" text="Create one" onAction="#openSignUp"
+                           style="-fx-font-size: 13px; -fx-text-fill: #6d4c41; -fx-border-color: transparent;"/>
+            </HBox>
+
+            <Separator prefWidth="320" style="-fx-padding: 10 0;"/>
+
+            <Button text="Continue as Guest" onAction="#handleGuest"
+                    prefWidth="320" prefHeight="40"
+                    style="-fx-background-color: transparent; -fx-text-fill: #8d6e63; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+
+            <Hyperlink text="← Back to Home" onAction="#backToHome" alignment="CENTER"
+                       style="-fx-font-size: 13px; -fx-text-fill: #a1887f; -fx-padding: 6 0 0 0;"/>
+        </VBox>
+    </VBox>
+</StackPane>

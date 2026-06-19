@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="vanillacoffeesystem.DashboardController"
+            style="-fx-background-color: #faf7f4; -fx-font-family: 'Segoe UI', Arial, sans-serif;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12"
+              style="-fx-background-color: white; -fx-border-color: #efe6df; -fx-border-width: 0 0 1 0; -fx-padding: 14 28;">
+            <Label text="Vanilla" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Home" onAction="#openMainApp"
+                    style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 10 20; -fx-cursor: hand;"/>
+            <Button text="Logout" onAction="#handleLogout"
+                    style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 10 20; -fx-cursor: hand;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <VBox spacing="28" alignment="TOP_CENTER" style="-fx-padding: 36 40;">
+                <VBox alignment="CENTER" spacing="6">
+                    <Label text="☕" style="-fx-font-size: 36px;"/>
+                    <Label fx:id="welcomeLabel" text="Welcome!"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4e342e;"/>
+                    <Label fx:id="roleLabel" text=""
+                           style="-fx-font-size: 14px; -fx-text-fill: #8d6e63;"/>
+                </VBox>
+
+                <VBox fx:id="customerSection" spacing="14" maxWidth="920"
+                      style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e8ddd4; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 20;">
+                    <Label text="Customer services"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                    <Label text="Order food, track deliveries, and manage your account."
+                           style="-fx-font-size: 14px; -fx-text-fill: #8d6e63;"/>
+                    <FlowPane hgap="12" vgap="12" alignment="CENTER">
+                        <Button fx:id="orderButton" text="Place Order" onAction="#openPlaceOrder"
+                                prefWidth="150" prefHeight="44"
+                                style="-fx-background-color: #6d4c41; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20; -fx-cursor: hand;"/>
+                        <Button fx:id="historyButton" text="My Orders" onAction="#openOrderHistory"
+                                prefWidth="150" prefHeight="44"
+                                style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button fx:id="reservationButton" text="Reservations" onAction="#openReservations"
+                                prefWidth="150" prefHeight="44"
+                                style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button fx:id="deliveryButton" text="Deliveries" onAction="#openDeliveries"
+                                prefWidth="150" prefHeight="44"
+                                style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button fx:id="paymentsButton" text="Payments" onAction="#openPayments"
+                                prefWidth="150" prefHeight="44"
+                                style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button text="Charts &amp; Reports" onAction="#openCharts"
+                                prefWidth="150" prefHeight="44"
+                                style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button text="Browse Menu" onAction="#openMainApp"
+                                prefWidth="150" prefHeight="44"
+                                style="-fx-background-color: #6d4c41; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-padding: 10 20; -fx-cursor: hand;"/>
+                    </FlowPane>
+                </VBox>
+
+                <VBox fx:id="staffSection" spacing="14" maxWidth="920" visible="false" managed="false"
+                      style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e8ddd4; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 20;">
+                    <Label text="Staff operations"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                    <Label text="Manage orders, deliveries, and table reservations."
+                           style="-fx-font-size: 14px; -fx-text-fill: #8d6e63;"/>
+                    <FlowPane hgap="12" vgap="12" alignment="CENTER">
+                        <Button fx:id="staffOrdersButton" text="Manage Orders" onAction="#openEmployeeOrders"
+                                prefWidth="180" prefHeight="44"
+                                style="-fx-background-color: #6d4c41; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button fx:id="staffDeliveryButton" text="Manage Deliveries" onAction="#openDeliveries"
+                                prefWidth="180" prefHeight="44"
+                                style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button fx:id="staffReservationsButton" text="Manage Reservations" onAction="#openEmployeeReservations"
+                                prefWidth="200" prefHeight="44"
+                                style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        <Button text="Browse Menu" onAction="#openMainApp"
+                                prefWidth="150" prefHeight="44"
+                                style="-fx-background-color: transparent; -fx-text-fill: #6d4c41; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                    </FlowPane>
+                </VBox>
+
+                <VBox fx:id="topItemsSection" spacing="14" maxWidth="920"
+                      style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e8ddd4; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 20;">
+                    <Label text="📊 Top Ordered Items"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="periodBox" prefWidth="160"/>
+                        <HBox fx:id="customRangeBar" spacing="10" alignment="CENTER_LEFT"
+                              visible="false" managed="false">
+                            <Label text="From:" style="-fx-font-size: 13px; -fx-text-fill: #5d4037;"/>
+                            <DatePicker fx:id="startPicker" prefWidth="130"/>
+                            <Label text="To:" style="-fx-font-size: 13px; -fx-text-fill: #5d4037;"/>
+                            <DatePicker fx:id="endPicker" prefWidth="130"/>
+                            <Button fx:id="applyRangeButton" text="Apply" onAction="#applyCustomRange"
+                                    style="-fx-background-color: #6d4c41; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;"/>
+                        </HBox>
+                    </HBox>
+
+                    <HBox spacing="16" alignment="TOP_CENTER">
+                        <VBox fx:id="storeHitCard" spacing="8" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: #FFF8E1; -fx-background-radius: 8; -fx-padding: 12; -fx-min-width: 280;">
+                            <Label text="🔥 Store's Hit" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4e342e;"/>
+                            <ProgressIndicator fx:id="storeHitProgress" maxWidth="32" maxHeight="32"/>
+                            <VBox fx:id="storeHitContent" spacing="4" visible="false" managed="false">
+                                <Label fx:id="storeHitNameLabel" text="" wrapText="true"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
+                                <Label fx:id="storeHitCategoryLabel" text=""
+                                       style="-fx-font-size: 12px; -fx-text-fill: #6d4c41;"/>
+                                <Label fx:id="storeHitQtyLabel" text=""
+                                       style="-fx-font-size: 13px; -fx-text-fill: #5d4037;"/>
+                            </VBox>
+                            <Label fx:id="storeHitEmptyLabel" text="No orders in this period yet."
+                                   visible="false" managed="false"
+                                   style="-fx-font-size: 13px; -fx-text-fill: #8d6e63;"/>
+                        </VBox>
+
+                        <VBox fx:id="yourGoToCard" spacing="8" HBox.hgrow="ALWAYS"
+                              style="-fx-background-color: #FFF8E1; -fx-background-radius: 8; -fx-padding: 12; -fx-min-width: 280;">
+                            <Label text="⭐ Your Go-To" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4e342e;"/>
+                            <ProgressIndicator fx:id="yourGoToProgress" maxWidth="32" maxHeight="32"/>
+                            <VBox fx:id="yourGoToContent" spacing="4" visible="false" managed="false">
+                                <Label fx:id="yourGoToNameLabel" text="" wrapText="true"
+                                       style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
+                                <Label fx:id="yourGoToQtyLabel" text=""
+                                       style="-fx-font-size: 13px; -fx-text-fill: #5d4037;"/>
+                            </VBox>
+                            <Label fx:id="yourGoToEmptyLabel" text="No orders in this period yet."
+                                   visible="false" managed="false"
+                                   style="-fx-font-size: 13px; -fx-text-fill: #8d6e63;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+                <VBox fx:id="statCardsSection" spacing="14" maxWidth="920"
+                      style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e8ddd4; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 20;">
+                    <Label text="📈 Your Stats"
+                           style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #5d4037;"/>
+                    <HBox spacing="12" alignment="TOP_CENTER">
+                        <VBox spacing="6" style="-fx-background-color: #FFF8E1; -fx-background-radius: 8; -fx-padding: 10; -fx-min-width: 110;">
+                            <Label text="Days Since Last Order"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #8d6e63;"/>
+                            <Label fx:id="statDaysSinceValue" text="—"
+                                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
+                        </VBox>
+                        <VBox spacing="6" style="-fx-background-color: #FFF8E1; -fx-background-radius: 8; -fx-padding: 10; -fx-min-width: 110;">
+                            <Label text="Avg Order Value"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #8d6e63;"/>
+                            <Label fx:id="statAvgOrderValue" text="—"
+                                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
+                        </VBox>
+                        <VBox spacing="6" style="-fx-background-color: #FFF8E1; -fx-background-radius: 8; -fx-padding: 10; -fx-min-width: 110;">
+                            <Label text="Items Not Tried Yet"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #8d6e63;"/>
+                            <Label fx:id="statUntriedItems" text="—" wrapText="true"
+                                   style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
+                        </VBox>
+                        <VBox spacing="6" style="-fx-background-color: #FFF8E1; -fx-background-radius: 8; -fx-padding: 10; -fx-min-width: 110;">
+                            <Label text="Total Spent All Time"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #8d6e63;"/>
+                            <Label fx:id="statTotalSpentValue" text="—"
+                                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
+                        </VBox>
+                        <VBox fx:id="couponCard" spacing="6"
+                              style="-fx-background-color: #FFF8E1; -fx-background-radius: 8; -fx-padding: 10; -fx-min-width: 160;">
+                            <Label text="Next Coupon Progress"
+                                   style="-fx-font-size: 11px; -fx-text-fill: #8d6e63;"/>
+                            <Label fx:id="statCouponLabel" text="—" wrapText="true"
+                                   style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #3e2723;"/>
+                            <ProgressBar fx:id="statCouponProgress" prefWidth="140" visible="false" managed="false"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="24"
+              style="-fx-background-color: #3e2723; -fx-padding: 14;">
+            <Label text="Vanilla Coffee — Customer &amp; Staff Portal"
+                   style="-fx-text-fill: #d7ccc8; -fx-font-size: 13px;"/>
+            <Label text="022961179"
+                   style="-fx-text-fill: #d7ccc8; -fx-font-size: 13px;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
