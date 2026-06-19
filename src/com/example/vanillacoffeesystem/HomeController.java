@@ -44,6 +44,10 @@ public class HomeController {
             logoutBtn.setOnAction(e -> handleLogout());
 
             if (!SessionManager.isEmployee()) {
+                Button dashboardBtn = new Button("Dashboard");
+                styleOutlineButton(dashboardBtn);
+                dashboardBtn.setOnAction(e -> openDashboard());
+
                 Button orderBtn = new Button("Place Order");
                 stylePrimaryButton(orderBtn);
                 orderBtn.setOnAction(e -> openPlaceOrder());
@@ -64,13 +68,21 @@ public class HomeController {
                 styleOutlineButton(paymentsBtn);
                 paymentsBtn.setOnAction(e -> openPayments());
 
-                authBox.getChildren().addAll(welcome, orderBtn, historyBtn, reservationBtn, deliveryBtn, paymentsBtn, logoutBtn);
+                authBox.getChildren().addAll(welcome, dashboardBtn, orderBtn, historyBtn, reservationBtn, deliveryBtn, paymentsBtn, logoutBtn);
             } else {
+                Button manageOrdersBtn = new Button("Manage Orders");
+                styleOutlineButton(manageOrdersBtn);
+                manageOrdersBtn.setOnAction(e -> openEmployeeOrders());
+
                 Button manageDeliveriesBtn = new Button("Manage Deliveries");
                 styleOutlineButton(manageDeliveriesBtn);
                 manageDeliveriesBtn.setOnAction(e -> openDeliveries());
 
-                authBox.getChildren().addAll(welcome, manageDeliveriesBtn, logoutBtn);
+                Button manageReservationsBtn = new Button("Manage Reservations");
+                styleOutlineButton(manageReservationsBtn);
+                manageReservationsBtn.setOnAction(e -> openEmployeeReservations());
+
+                authBox.getChildren().addAll(welcome, manageOrdersBtn, manageDeliveriesBtn, manageReservationsBtn, logoutBtn);
             }
         } else {
             Button loginBtn = new Button("Login");
@@ -150,7 +162,7 @@ public class HomeController {
             Stage stage = (Stage) branchPane.getScene().getWindow();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml("menu-view.fxml")));
             Parent root = loader.load();
-            stage.setScene(new Scene(root, 1100, 720));
+            stage.setScene(SceneHelper.create(root));
             stage.setTitle("Vanilla - " + branch.getBranchName());
             stage.show();
         } catch (Exception e) {
@@ -169,6 +181,14 @@ public class HomeController {
     private void openSignUp() {
         try {
             switchScene("signup-view.fxml", "Vanilla Coffee - Sign Up");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openDashboard() {
+        try {
+            switchScene("dashboard-view.fxml", "Vanilla Coffee - Dashboard");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -214,6 +234,22 @@ public class HomeController {
         }
     }
 
+    private void openEmployeeOrders() {
+        try {
+            switchScene("employee-orders-view.fxml", "Vanilla Coffee - Manage Orders");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openEmployeeReservations() {
+        try {
+            switchScene("reservation-view.fxml", "Vanilla Coffee - Manage Reservations");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void handleLogout() {
         SessionManager.clear();
         buildAuthBar();
@@ -223,7 +259,7 @@ public class HomeController {
         Stage stage = (Stage) authBox.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml(fxml)));
         Parent root = loader.load();
-        stage.setScene(new Scene(root, 1100, 720));
+        stage.setScene(SceneHelper.create(root));
         stage.setTitle(title);
         stage.show();
     }

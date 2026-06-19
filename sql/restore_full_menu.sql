@@ -15,12 +15,13 @@ PREPARE stmt FROM @sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
-SOURCE migrate_drinks_menu.sql;
 SOURCE migrate_al_tireh_menu.sql;
 SOURCE migrate_nablus_menu.sql;
 SOURCE migrate_manara_and_desserts.sql;
-SOURCE migrate_product_images.sql;
+SOURCE migrate_drinks_menu.sql;
+SOURCE migrate_small_branches_no_food_no_hookah.sql;
 SOURCE migrate_new_menu_items.sql;
+SOURCE migrate_product_images.sql;
 SOURCE migrate_product_images_2.sql;
 SOURCE migrate_product_images_3.sql;
 SOURCE migrate_product_images_standardize.sql;

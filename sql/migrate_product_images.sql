@@ -1,7 +1,5 @@
--- Link uploaded menu images to products
+-- Link uploaded menu images to products (column added above if missing)
 USE vanilla_db;
-
-ALTER TABLE Product ADD COLUMN image_file VARCHAR(100) NULL;
 
 UPDATE Product SET image_file = 'full_english_breakfast.jpg' WHERE product_name = 'Full English Breakfast';
 UPDATE Product SET image_file = 'shakshuka.jpg'              WHERE product_name = 'Shakshuka';

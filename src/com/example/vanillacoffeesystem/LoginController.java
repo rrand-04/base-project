@@ -102,6 +102,12 @@ public class LoginController {
             return;
         }
 
+        String passwordError = AuthValidator.validatePassword(password);
+        if (passwordError != null) {
+            showError(passwordError);
+            return;
+        }
+
         if (employeeMode) {
             loginEmployee(username, password);
         } else {
@@ -133,12 +139,12 @@ public class LoginController {
                     return;
                 }
                 SessionManager.setCustomer(rs.getInt("customer_id"), rs.getString("customer_name"));
-                openHome();
+                openDashboard();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            showError("Could not connect to the server. Please try again.");
+            showError("Login failed: " + e.getMessage());
         }
     }
 
@@ -179,7 +185,7 @@ public class LoginController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            showError("Could not connect to the server. Please try again.");
+            showError("Login failed: " + e.getMessage());
         }
     }
 
@@ -216,7 +222,7 @@ public class LoginController {
         Stage stage = (Stage) loginButton.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource(ViewPaths.fxml(fxml)));
         Parent root = loader.load();
-        stage.setScene(new Scene(root, 1100, 720));
+        stage.setScene(SceneHelper.create(root));
         stage.setTitle(title);
         stage.show();
     }

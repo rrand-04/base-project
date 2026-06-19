@@ -50,6 +50,10 @@
                            prefWidth="320" prefHeight="42"
                            style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #d7ccc8; -fx-border-width: 1; -fx-font-size: 14px;"/>
 
+            <Label text="At least 8 characters with uppercase, lowercase, a number, and a symbol."
+                   wrapText="true" prefWidth="320"
+                   style="-fx-font-size: 11px; -fx-text-fill: #a1887f;"/>
+
             <Label fx:id="errorLabel" text="" wrapText="true" prefWidth="320" visible="false" managed="false"
                    style="-fx-font-size: 12px; -fx-text-fill: #c62828; -fx-padding: 4 0 0 0;"/>
 

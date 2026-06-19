@@ -251,9 +251,9 @@ UPDATE Branches SET manager_id = 4 WHERE branch_id = 2;
 
 INSERT INTO Customers (customer_name, customer_contact, username, password)
 VALUES
-('Lina Ahmad', '0591111111', 'lina', 'password123'),
-('Maya Saleh', '0592222222', 'maya', 'password123'),
-('Khaled Omar', '0593333333', 'khaled', 'password123');
+('Lina Ahmad', '0591111111', 'lina', 'Customer@1'),
+('Maya Saleh', '0592222222', 'maya', 'Customer@2'),
+('Khaled Omar', '0593333333', 'khaled', 'Customer@3');
 
 INSERT INTO Product
 (product_name, product_category, product_price, product_description)

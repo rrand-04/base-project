@@ -19,6 +19,9 @@
                 <Label text="My Orders"
                        style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #4e342e;"/>
                 <Region HBox.hgrow="ALWAYS"/>
+                <CheckBox fx:id="showCancelledCheckBox" text="Show cancelled orders"
+                          onAction="#toggleShowCancelled"
+                          style="-fx-font-size: 13px; -fx-text-fill: #5d4037;"/>
                 <Label text="Filter:" style="-fx-font-size: 13px; -fx-text-fill: #8d6e63;"/>
                 <ComboBox fx:id="statusFilterCombo" prefWidth="140" onAction="#filterByStatus"
                           style="-fx-font-size: 13px;"/>
@@ -28,7 +31,7 @@
 
     <center>
         <VBox spacing="16" style="-fx-padding: 24 28;">
-            <TableView fx:id="ordersTable" prefHeight="320">
+            <TableView fx:id="ordersTable" prefHeight="300">
                 <columns>
                     <TableColumn fx:id="orderIdColumn" text="Order ID" prefWidth="90"/>
                     <TableColumn fx:id="orderDateColumn" text="Date" prefWidth="120"/>
@@ -37,6 +40,14 @@
                     <TableColumn fx:id="totalColumn" text="Total (₪)" prefWidth="110"/>
                 </columns>
             </TableView>
+
+            <HBox fx:id="cancelPanel" spacing="12" alignment="CENTER_LEFT" visible="false" managed="false">
+                <TextField fx:id="cancelReasonField" promptText="Cancellation reason (required)"
+                           prefWidth="360" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="cancelOrderButton" text="Cancel Order" onAction="#cancelOrder"
+                        disable="true"
+                        style="-fx-background-color: transparent; -fx-text-fill: #c62828; -fx-border-color: #ef9a9a; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 16; -fx-cursor: hand;"/>
+            </HBox>
 
             <VBox fx:id="detailPanel" spacing="10" visible="false" managed="false"
                   style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #e8ddd4; -fx-border-radius: 12; -fx-border-width: 1; -fx-padding: 16;">
